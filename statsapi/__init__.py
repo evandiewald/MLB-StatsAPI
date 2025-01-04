@@ -1539,8 +1539,8 @@ def standings_data(
     return divisions
 
 
-def roster(teamId, rosterType=None, season=datetime.now().year, date=None):
-    """Get the roster for a given team."""
+def roster_data(teamId, rosterType=None, season=datetime.now().year, date=None):
+    """Get the roster data for a given team."""
     if not rosterType:
         rosterType = "active"
 
@@ -1549,10 +1549,16 @@ def roster(teamId, rosterType=None, season=datetime.now().year, date=None):
         params.update({"date": date})
 
     r = get("team_roster", params)
+    return r["roster"]
+
+
+def roster(teamId, rosterType=None, season=datetime.now().year, date=None):
+    """Get the roster for a given team."""
+    _roster_data = roster_data(teamId, rosterType, season, date)
 
     roster = ""
     players = []
-    for x in r["roster"]:
+    for x in _roster_data:
         players.append(
             [x["jerseyNumber"], x["position"]["abbreviation"], x["person"]["fullName"]]
         )
